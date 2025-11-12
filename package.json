@@ -14,5 +14,9 @@
   "devDependencies": {
     "@playwright/test": "^1.56.1",
     "@types/node": "^24.10.1"
+  },
+  "dependencies": {
+    "@arghajit/playwright-pulse-report": "^0.2.6",
+    "dotenv": "^17.2.3"
   }
 }

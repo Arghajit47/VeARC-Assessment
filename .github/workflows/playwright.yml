@@ -23,6 +23,8 @@ jobs:
           VALID_USERNAME: ${{ secrets.VALID_USERNAME }}
           VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
         run: npm run test:headless
+      - name: Generate Pulse Report
+        run: npm run pulse-single-file-report
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
