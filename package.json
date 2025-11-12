@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test:headed": "playwright test --headed",
-    "test:headless": "playwright test --headless",
+    "test:headless": "playwright test",
     "pulse-single-file-report": "generate-pulse-report"
   },
   "keywords": [],
