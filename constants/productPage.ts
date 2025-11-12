@@ -1,0 +1,6 @@
+const PRODUCT_PAGE_CONSTANTS = {
+  SEARCH_MODAL_HEADER: "Search",
+  SEARCH_MODAL_KEYWORD_LABEL: "Search keyword:",
+};
+
+export default PRODUCT_PAGE_CONSTANTS;
