@@ -16,6 +16,11 @@ export default class ProductPage {
    * @private
    */
   private common: InitializationPage;
+  /**
+   * Array to store product details in JSON format
+   * @private
+   */
+  private productDataArray: any[] = [];
 
   /**
    * Initializes a new instance of membersPage
@@ -58,6 +63,7 @@ export default class ProductPage {
   }
 
   async addProductsToCart() {
+    let productDetails: any[] = [];
     const productCount = await this.common.getCountOfElements(
       productPageElements.products
     );
@@ -73,7 +79,7 @@ export default class ProductPage {
     }
     await this.common.waitForPageLoad();
     // await this.common.typeOnElement(productPageElements.productQuantity, "2");
-    const productDetails = await this.storeProductDetails();
+    productDetails = await this.storeProductDetails();
     await this.common.clickOnElement(productPageElements.addToCartBtn);
     await this.common.expectInnerText(
       productPageElements.addToCartNotification,
@@ -85,21 +91,30 @@ export default class ProductPage {
   }
 
   async storeProductDetails() {
-    const productName = await this.common.getTextContents(
-      productPageElements.productName
-    );
-    const productPrice = await this.common.getTextContents(
+    const productNameText =
+      (
+        await this.common.getTextContents(productPageElements.productName)
+      )?.trim() ?? "";
+    const productPriceText = await this.common.getTextContents(
       productPageElements.productPrice
     );
-    const productQuantity = await this.common.getAttribute(
+    const productQuantityText = await this.common.getAttribute(
       productPageElements.productQuantity,
       "value"
     );
-    return {
-      productName,
-      productPrice,
-      productQuantity,
+
+    const productData = {
+      product: {
+        name: productNameText || "",
+      },
+      price: parseFloat((productPriceText || "").replace(/[^\d.]/g, "") || "0"),
+      quantity: parseInt(productQuantityText || "0", 10),
     };
+
+    // Append data to the array instead of overwriting
+    this.productDataArray.push(productData);
+
+    return this.productDataArray;
   }
 
   async verifyTwoItemsInCart() {

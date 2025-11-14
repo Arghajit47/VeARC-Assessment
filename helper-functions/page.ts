@@ -849,4 +849,20 @@ export default class InitializationPage {
     }
     return attributeValue;
   }
+
+  /**
+   * Validates that an actual object matches an expected object by comparing each key-value pair.
+   * @param actualObject - The object to validate against the expected structure.
+   * @param expectedObject - The object containing the expected key-value pairs.
+   * @throws Will throw an assertion error if any key in expectedObject does not match the corresponding key in actualObject.
+   */
+  async validateObject(
+    actualObject: Record<string, any>,
+    expectedObject: Record<string, any>
+  ) {
+    for (const [key, expectedValue] of Object.entries(expectedObject)) {
+      const actualValue = actualObject[key];
+      expect(actualValue).toEqual(expectedValue);
+    }
+  }
 }
