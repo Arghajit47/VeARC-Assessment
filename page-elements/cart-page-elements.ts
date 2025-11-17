@@ -8,6 +8,19 @@ const cartPageElements = {
     `(//td/input[@class='qty-input'])[${index}]`,
   checkoutBtn: "button#checkout",
   termsAndServices: "input#termsofservice",
+  cartTable: "table.cart",
+  // Cart table parsing locators
+  cartTableHeaders: "thead th",
+  cartTablePictureColumn: ".picture",
+  cartTableRows: "tbody tr.cart-item-row",
+  cartTableCells: "td",
+  cartTableRemoveCheckbox: 'input[name="removefromcart"]',
+  cartTableImage: "img",
+  cartTableProductNameLink: "a.product-name",
+  cartTableAttributes: ".attributes",
+  cartTablePriceSpan: "span.product-unit-price",
+  cartTableQuantityInput: "input.qty-input",
+  cartTableSubtotal: ".product-subtotal",
 };
 
 export default cartPageElements;

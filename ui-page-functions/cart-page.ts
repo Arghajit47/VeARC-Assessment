@@ -139,4 +139,92 @@ export default class CartPage {
   async acceptTermsAndServices() {
     await this.common.clickOnElement(cartPageElements.termsAndServices);
   }
+
+  /**
+   * Parses the cart table and converts its data into a JSON-friendly array of objects.
+   * @returns {Array<Object>} An array of objects, where each object represents a cart item.
+   */
+  async parseCartTable() {
+    // Step 1: Get the headers and create clean, machine-readable keys.
+    const headerElements = this.page.locator(cartPageElements.cartTableHeaders);
+    const headerTexts = await headerElements.allTextContents();
+
+    const keys = headerTexts.map((headerText) => {
+      const keyText = headerText.trim().toLowerCase();
+      if (keyText === "product(s)") return "product";
+      if (keyText === "qty.") return "quantity";
+      return keyText; // e.g., 'remove', 'price', 'total'
+    });
+
+    // Step 2: Get all the data rows from the table body.
+    const rowElements = this.page.locator(cartPageElements.cartTableRows);
+    const rowCount = await rowElements.count();
+    const cartData = [];
+
+    // Step 3: Process each row to transform it into a JavaScript object.
+    for (let i = 0; i < rowCount; i++) {
+      const row = rowElements.nth(i);
+      const cells = row.locator(cartPageElements.cartTableCells);
+      const cellCount = await cells.count();
+      const rowData: Record<string, any> = {};
+
+      // Map cell data to the correct property using keys array.
+      for (let j = 0; j < cellCount && j < keys.length; j++) {
+        const cell = cells.nth(j);
+        const key = keys[j];
+
+        // Extract data based on the key type.
+        switch (key) {
+          case "product":
+            // For product cells, create a nested object.
+            const productNameElement = cell.locator(
+              cartPageElements.cartTableProductNameLink
+            );
+            const productName = await productNameElement.textContent();
+            rowData[key] = {
+              name: productName?.trim() || "",
+            };
+            break;
+          case "price":
+            // Find the price span and extract numeric value.
+            const priceElement = cell.locator(
+              cartPageElements.cartTablePriceSpan
+            );
+            const priceText = await priceElement.textContent();
+            rowData[key] = parseFloat(
+              (priceText || "").replace(/[^\d.]/g, "") || "0"
+            );
+            break;
+          case "quantity":
+            // Get the value from the quantity input.
+            const qtyElement = cell.locator(
+              cartPageElements.cartTableQuantityInput
+            );
+            const qtyValue = await qtyElement.getAttribute("value");
+            rowData[key] = parseInt(qtyValue || "0", 10);
+            break;
+
+          case "remove":
+          case "total":
+          case "":
+            break;
+          default:
+            // A fallback for any other columns.
+            const cellText = await cell.textContent();
+            rowData[key] = cellText?.trim() || "";
+        }
+      }
+
+      cartData.push(rowData);
+    }
+
+    return cartData;
+  }
+
+  async verifyCartAndProducts(
+    actualObject: Record<string, any>,
+    expectedObject: Record<string, any>
+  ) {
+    await this.common.validateObject(actualObject, expectedObject);
+  }
 }

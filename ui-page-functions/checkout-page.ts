@@ -100,11 +100,10 @@ export default class CheckoutPage {
       checkoutPageElements.thankYouMessage.title,
       CHECKOUT_PAGE_CONSTANTS.THANK_YOU_MESSAGE_TITLE
     );
-    console.log(
-      await this.common.getTextContents(
-        checkoutPageElements.thankYouMessage.orderId
-      )
+    const orderIdText = await this.common.getTextContents(
+      checkoutPageElements.thankYouMessage.orderId
     );
+    console.log(orderIdText?.trim() || "");
     await this.common.clickOnElement(
       checkoutPageElements.thankYouMessage.continueBtn
     );

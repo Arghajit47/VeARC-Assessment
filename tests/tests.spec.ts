@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import LoginPage from "../ui-page-functions/login-page";
 import CheckoutPage from "../ui-page-functions/checkout-page";
 import CartPage from "../ui-page-functions/cart-page";
@@ -9,7 +9,8 @@ let loginPage: LoginPage;
 let checkoutPage: CheckoutPage;
 let cartPage: CartPage;
 let productPage: ProductPage;
-let details1: object, details2: object;
+let details: any[] = [];
+let cartData: any[] = [];
 
 test.describe("VeArc Assessment", async () => {
   test.beforeEach(async ({ page }) => {
@@ -33,29 +34,19 @@ test.describe("VeArc Assessment", async () => {
     await test.step("Searching for products", async () => {
       await productPage.searchProducts("TCP");
       await productPage.verifySearchModalIsDisplayed("TCP");
-      details1 = await productPage.addProductsToCart();
+      details = await productPage.addProductsToCart();
       await loginPage.gotoWebpage();
       await productPage.searchProducts("Phone Cover");
       await productPage.verifySearchModalIsDisplayed("Phone Cover");
-      details2 = await productPage.addProductsToCart();
+      details = await productPage.addProductsToCart();
       await productPage.verifyTwoItemsInCart();
     });
 
     await test.step("Verifying the cart table", async () => {
       await cartPage.clickOnCartBtn();
       await cartPage.verifyCartPageUrl();
-      await cartPage.verifyProductInCart(
-        details1 as {
-          productName: string;
-          productPrice: string;
-          productQuantity: string;
-        },
-        details2 as {
-          productName: string;
-          productPrice: string;
-          productQuantity: string;
-        }
-      );
+      cartData = await cartPage.parseCartTable();
+      await cartPage.verifyCartAndProducts(cartData, details);
       await cartPage.acceptTermsAndServices();
       await cartPage.clickCheckoutBtn();
     });
