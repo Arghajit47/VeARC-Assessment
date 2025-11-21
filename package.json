@@ -7,7 +7,8 @@
     "test:headed": "playwright test --headed",
     "test:headless": "playwright test",
     "pulse-single-file-report": "generate-pulse-report",
-    "pulse-dashboard": "pulse-dashboard"
+    "pulse-dashboard": "pulse-dashboard",
+    "send-report": "send-email"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +18,8 @@
     "@types/node": "^24.10.1"
   },
   "dependencies": {
-    "@arghajit/playwright-pulse-report": "^0.2.6",
+    "@arghajit/playwright-pulse-report": "^0.2.8",
     "dotenv": "^17.2.3",
-    "pulse-dashboard": "^1.1.4"
+    "pulse-dashboard": "^1.1.5"
   }
 }
