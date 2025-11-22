@@ -18,7 +18,7 @@
     "@types/node": "^24.10.1"
   },
   "dependencies": {
-    "@arghajit/playwright-pulse-report": "^0.2.8",
+    "@arghajit/playwright-pulse-report": "^0.2.9",
     "dotenv": "^17.2.3",
     "pulse-dashboard": "^1.1.5"
   }
