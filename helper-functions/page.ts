@@ -882,8 +882,6 @@ export default class InitializationPage {
     step: any,
     firstRequestUrl: { url: string; method: string; status: number },
     secondRequestUrl?: { url: string; method: string; status: number }
-    // requestUrl: string,
-    // secondRequestUrl?: string
   ) {
     let firstResponseData: any = null;
     // Promise for the first API response
@@ -918,7 +916,7 @@ export default class InitializationPage {
     let secondResponseData = null;
     if (secondResponsePromise) {
       const secondResponse = await secondResponsePromise;
-      if (firstResponse.headers()["content-type"] != "application/json") {
+      if (secondResponse.headers()["content-type"] != "application/json") {
         secondResponseData = secondResponse;
       } else {
         secondResponseData = JSON.stringify(await secondResponse.json());

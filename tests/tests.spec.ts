@@ -12,6 +12,7 @@ let productPage: ProductPage;
 let details: any[] = [];
 let cartData: any[] = [];
 
+// Extended timeout to accommodate API response validations during login and cart flows
 test.setTimeout(120000);
 
 test.describe("VeArc Assessment", async () => {
