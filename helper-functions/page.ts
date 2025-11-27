@@ -865,4 +865,70 @@ export default class InitializationPage {
       expect(actualValue).toEqual(expectedValue);
     }
   }
+
+  /**
+   * Captures one or two API responses while executing a navigation step.
+   * Waits for the step to complete and concurrently monitors for matching
+   * successful (HTTP 200) responses to the provided URL(s).
+   *
+   * @param step - An asynchronous function or promise that triggers the page navigation/action.
+   * @param requestUrl - Partial URL string to match the first required API response.
+   * @param secondRequestUrl - Optional partial URL string to match a second API response.
+   * @returns Promise resolving to an object containing:
+   *   - firstResponse: Parsed JSON body of the first matched response.
+   *   - secondResponse: Parsed JSON body of the second matched response, or null if not provided.
+   */
+  async captureResponseWhenPageLoad(
+    step: any,
+    firstRequestUrl: { url: string; method: string; status: number },
+    secondRequestUrl?: { url: string; method: string; status: number }
+    // requestUrl: string,
+    // secondRequestUrl?: string
+  ) {
+    let firstResponseData: any = null;
+    // Promise for the first API response
+    const firstResponsePromise = this.page.waitForResponse(
+      (response) =>
+        response.url().includes(firstRequestUrl.url) &&
+        response.status() === firstRequestUrl.status
+    );
+
+    // Promise for the second API response (optional)
+    let secondResponsePromise: Promise<any> | null = null;
+    if (secondRequestUrl) {
+      secondResponsePromise = this.page.waitForResponse(
+        (response) =>
+          response.url().includes(secondRequestUrl.url) &&
+          response.status() === secondRequestUrl.status
+      );
+    }
+
+    // Execute the step (page navigation) concurrently with the API wait
+    await step;
+
+    // Wait for the first response
+    const firstResponse = await firstResponsePromise;
+    if (firstResponse.headers()["content-type"] != "application/json") {
+      firstResponseData = firstResponse;
+    } else {
+      firstResponseData = JSON.stringify(await firstResponse.json());
+    }
+
+    // Wait for the second response if provided
+    let secondResponseData = null;
+    if (secondResponsePromise) {
+      const secondResponse = await secondResponsePromise;
+      if (firstResponse.headers()["content-type"] != "application/json") {
+        secondResponseData = secondResponse;
+      } else {
+        secondResponseData = JSON.stringify(await secondResponse.json());
+      }
+    }
+
+    // Return both responses
+    return {
+      firstResponse: firstResponseData,
+      secondResponse: secondResponseData,
+    };
+  }
 }

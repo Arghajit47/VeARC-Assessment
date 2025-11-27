@@ -80,10 +80,23 @@ export default class ProductPage {
     await this.common.waitForPageLoad();
     // await this.common.typeOnElement(productPageElements.productQuantity, "2");
     productDetails = await this.storeProductDetails();
-    await this.common.clickOnElement(productPageElements.addToCartBtn);
+    let { firstResponse } = await this.common.captureResponseWhenPageLoad(
+      this.common.clickOnElement(productPageElements.addToCartBtn),
+      {
+        url: PRODUCT_PAGE_CONSTANTS.CART_API_URL,
+        method: "POST",
+        status: 200,
+      }
+    );
+    const firstResponseJson = await firstResponse.json();
+    this.common.expectEqual(firstResponseJson.success, true);
+    this.common.expectEqual(
+      firstResponseJson.message,
+      PRODUCT_PAGE_CONSTANTS.ADDED_TO_CART_API
+    );
     await this.common.expectInnerText(
       productPageElements.addToCartNotification,
-      "The product has been added to your shopping cart"
+      PRODUCT_PAGE_CONSTANTS.ADDED_TO_CART_NOTIFICATION
     );
     await this.common.clickOnElement(productPageElements.notificationCloseBtn);
     await this.common.waitForPageLoad();
