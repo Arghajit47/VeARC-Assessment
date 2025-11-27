@@ -44,7 +44,15 @@ export default class LoginPage {
    * and verifies the login page is displayed.
    */
   async clickOnLoginButton() {
-    await this.common.clickOnElement(loginPageElements.navbar.login);
+    const { firstResponse } = await this.common.captureResponseWhenPageLoad(
+      this.common.clickOnElement(loginPageElements.navbar.login),
+      {
+        url: LOGIN_PAGE_CONSTANTS.LOGIN_API_URL,
+        method: "POST",
+        status: 200,
+      }
+    );
+ 
     await this.common.waitForPageLoad("min");
     await this.verifyLoginPageIsDisplayed();
   }
@@ -82,6 +90,15 @@ export default class LoginPage {
     await this.common.typeOnElement(loginPageElements.usernameField, username);
     await this.common.typeOnElement(loginPageElements.passwordField, password);
     await this.common.clickOnElement(loginPageElements.rememberMe);
-    await this.common.clickOnElement(loginPageElements.loginButton);
+    // await this.common.clickOnElement(loginPageElements.loginButton);
+    const { firstResponse, secondResponse } =
+      await this.common.captureResponseWhenPageLoad(
+        this.common.clickOnElement(loginPageElements.loginButton),
+        {
+          url: LOGIN_PAGE_CONSTANTS.HOME_API_URL,
+          method: "GET",
+          status: 200,
+        }
+      );
   }
 }

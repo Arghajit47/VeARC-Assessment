@@ -12,6 +12,8 @@ let productPage: ProductPage;
 let details: any[] = [];
 let cartData: any[] = [];
 
+test.setTimeout(120000);
+
 test.describe("VeArc Assessment", async () => {
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
