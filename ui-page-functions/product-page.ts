@@ -92,7 +92,7 @@ export default class ProductPage {
     this.common.expectEqual(firstResponseJson.success, true);
     this.common.expectEqual(
       firstResponseJson.message,
-      PRODUCT_PAGE_CONSTANTS.ADDED_TO_CART_API
+      PRODUCT_PAGE_CONSTANTS.ADDED_TO_CART_API_RESPONSE
     );
     await this.common.expectInnerText(
       productPageElements.addToCartNotification,
